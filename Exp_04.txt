@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PROCESSES 100
+
+typedef struct {
+    int id;
+    int execution_time;
+} Process;
+
+void scheduleProcesses(Process processes[], int n) {
+    int completed = 0;
+    int total_time = 0;
+    int min_index;
+
+    while (completed < n) {
+        min_index = -1;
+        for (int i = 0; i < n; i++) {
+            if (processes[i].execution_time > 0) {
+                if (min_index == -1 || processes[i].execution_time < processes[min_index].execution_time) {
+                    min_index = i;
+                }
+            }
+        }
+
+        if (min_index != -1) {
+            total_time += processes[min_index].execution_time;
+            printf("Process %d executed for %d time units.\n", processes[min_index].id, processes[min_index].execution_time);
+            processes[min_index].execution_time = 0;
+            completed++;
+        }
+    }
+
+    printf("All processes completed in %d time units.\n", total_time);
+}
+
+int main() {
+    Process processes[MAX_PROCESSES];
+    int n;
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        processes[i].id = i + 1;
+        printf("Enter execution time for process %d: ", processes[i].id);
+        scanf("%d", &processes[i].execution_time);
+    }
+
+    scheduleProcesses(processes, n);
+    return 0;
+}
